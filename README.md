@@ -24,3 +24,7 @@ write it to stdout.
   Please flush the stdout periodically, so that the tour gets
 written to the stdout before it gets terminated by the
 evaluator.
+
+
+*Evaluation steps:
+	Just do "make test" and check output in files named as out_{i} in "tests" folder
