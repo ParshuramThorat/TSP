@@ -9,19 +9,13 @@ LDFLAGS = -lm
 
 all: tsp
 
-# channel: channel.o main.o
-# 	gcc $(LDFLAGS) $^ -o $@
-
-# channel.o: channel.c channel.h
-# 	gcc -c $(CFLAGS) $< -o $@
-
-# main.o: main.c channel.h
-# 	gcc -c $(CFLAGS) $< -o $@
-
-tsp: main.o
+tsp: tsp.o main.o
 	g++ $(LDFLAGS) $^ -o $@
 
-main.o: main.cpp 
+tsp.o: TSP.cpp TSP.h
+	g++ -c $(CFLAGS) $< -o $@
+
+main.o: main.cpp TSP.h
 	g++ -c $(CFLAGS) $< -o $@
 
 .PHONY: clean lint test

@@ -6,51 +6,53 @@ Date   : 24  September 2014
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
-#include "evaluator.cpp"
-#include "random_candidate_generator.cpp"
+#include <algorithm>
+#include "TSP.h"
 
-//Structure for city co-ordinates
-typedef struct City{
-	long double x ;
-	long double y ;
-	int rank;
-}city ;
+#define POPULATION_SIZE 50
+#define ELITISISM true
+#define MUTATE_RATIO 0.15  
+
+using namespace std ;
+
+double** matrix ;
+int noOfCities  ;
 
 int main(){
-	int no_Of_Cities ;
-	char type[100] ;
-	city * cities ;       // Array of struct "City"
-	long double ** matrix ;
-	
+	char type[20] ;
+	City * cities ;       // Array of struct "City"
+
 	scanf("%s" , type) ;
-	scanf("%d" , &no_Of_Cities) ;
-	int * tour = (int*)malloc(no_Of_Cities*sizeof(int));
+	scanf("%d" , &noOfCities) ;
 	
-	cities = (city*)malloc(sizeof(city)*no_Of_Cities);
+	cities = (City*)malloc(sizeof(City)*noOfCities);
 	
-	matrix = new long double* [no_Of_Cities] ;
-		for (int i = 0; i < no_Of_Cities; ++i) {
-			matrix[i] = new long double[no_Of_Cities] ;
+	matrix = new double* [noOfCities] ;
+		for (int i = 0; i < noOfCities; ++i) {
+			matrix[i] = new double [noOfCities] ;
 	}
 	
-	for (int i = 0; i < no_Of_Cities; ++i)
-	{
-		scanf("%Lf %Lf" , &cities[i].x , &cities[i].y);
+	for (int i = 0; i < noOfCities; ++i) {
+		scanf("%lf %lf" , &cities[i].x , &cities[i].y);
 	}
-	for (int i = 0; i < no_Of_Cities; ++i) {	
-		for (int j = 0; j < no_Of_Cities; ++j) {
-			scanf("%Lf" , &matrix[i][j]);
+	for (int i = 0; i < noOfCities; ++i) {	
+		for (int j = 0; j < noOfCities; ++j) {
+			scanf("%lf" , &matrix[i][j]);
 		}	
-	}
-	for (int i = 0; i < 50; ++i)
-	{
-	tour= random_cand_gen(i,no_Of_Cities);
-	long double cost = evaluator(matrix,no_Of_Cities,tour);
-	// for (int i = 0; i < no_Of_Cities; ++i)
-	// {
-	// 	printf("%d ",tour[i] );
-	// }
-	printf("%Lf\n",cost );
-	}
+	}	
+
+	Population *pop ;
+	pop = createPopulation(10 , true);
+	//printf("initial Distance = %lf\n", getCost( getFittest(pop, 10)  ));
+
+	pop = evolvePopulation( pop ,10, 5 ,  0.015);
+
+    // for (int i = 0; i < 1; i++) {
+    //     pop = evolvePopulation(pop , 10 , 5 , 2);
+    // }
+	
+	//printf("Cost = %lf\n", getCost( getFittest(pop , 10) ));
+	//printTour( getFittest(pop , 10) ) ;
+	
 	return 0 ;
 }
