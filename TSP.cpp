@@ -76,20 +76,25 @@ Population* createPopulation(int size , bool initialize)
 	pop = new Population[size];
 	int worstIndex;   
 	int worstCost ;
+	int city;
     int * nextRandomTour ; 		
 	if(initialize){
-		for (int i = 0; i < RANDOM_MAX ; ++i){
-			if( i < size){
-				pop[i].tour = shuffleTour(defaultTour()) ;				
+		for (int i = 0; i < RANDOM_MAX ; ++i)
+		{	
+			//printf("count = %d\n",i );
+			city = rand() % (noOfCities-1) + 1;
+			if( i < size)
+			{
+				pop[i].tour = nearestNeighbourTour(city);				
 			}
 			else
-			{
-				//printf("count = %d\n", i);	
+			{	
+
 				worstIndex  = getWeakestIndex(pop , size);  
 				worstCost   = getCost(pop[worstIndex].tour);
 				
-				nextRandomTour = shuffleTour(defaultTour()) ;
-				if( worstCost >  getCost( nextRandomTour ) ){
+				nextRandomTour = nearestNeighbourTour(city);
+				if( getCost( nextRandomTour ) < worstCost ){
 					pop[worstIndex].tour = nextRandomTour;
 				}
 			}
@@ -98,6 +103,47 @@ Population* createPopulation(int size , bool initialize)
 	}
 	return pop ;
 }
+
+/**************nearest neibour ************/
+int nearestNeighbour(int* tour , int* visited , int city)
+{
+	int costOFEdge = 10000000  ;
+	int nearest_Neighbour ;
+	for (int i = 1; i <= noOfCities; ++i)
+	{
+		if ( visited[i] == 0 && matrix[city][i] < costOFEdge )
+		{
+			nearest_Neighbour = i ;
+			costOFEdge = matrix[city][i] ;
+		}	
+	}
+	return nearest_Neighbour ;
+} 
+
+/*************nearest neighbour tour**********/
+int* nearestNeighbourTour(int city)
+{
+	int* tour ;
+	int * visited ;
+	tour = new int [noOfCities+1] ;
+	visited = new int [noOfCities+1] ; 
+	for (int i = 1; i <= noOfCities; ++i)
+	{
+		tour[i] = 0 ;
+		visited[i] = 0;
+	}
+	
+	tour[1] = city ;
+	visited[city] = 1 ;
+	for (int i = 2; i <= noOfCities; ++i)
+	{
+		tour[i] = nearestNeighbour(tour , visited , city);
+		city = tour[i] ;
+		visited[city] = 1 ;
+	}
+	return tour ;
+}
+
 
 /************get Tour from population*********/
 int* getTour(Population* pop , int index)

@@ -6,9 +6,9 @@
 #define TOURNAMENT_SIZE 10 
 #define POPULATION_SIZE 100
 #define ELITISISM true
-#define MUTATE_RATE 0.15 
+#define MUTATE_RATE 0.015 
 #define GENERATIONS 100
-#define RANDOM_MAX 100000
+#define RANDOM_MAX 10000
 
 
 extern double** matrix ;
@@ -44,6 +44,10 @@ double getFitness(int* tour);
 bool containsCity(int* tour , int city);
 
 void swapCity(int* tour , int cityIndex1 , int cityIndex2) ;
+
+int nearestNeighbour(int* tour , int* visited ,int city );
+
+int* nearestNeighbourTour(int city);
 
 /*************creating population ******/
 Population* createPopulation(int size,bool initilize);
