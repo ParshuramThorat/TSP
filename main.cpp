@@ -15,12 +15,11 @@ using namespace std ;
 double** matrix ;
 int noOfCities  ;
 
-int optimizedCost = 0 ;
+double optimizedCost  ;
 int* optimizedTour ;
 
 int main(){
-	clock_t t1,t2;
-    t1 = clock();
+	clock_t t1,t2 , t3;
     srand(time(NULL));
 	char type[20] ;
 	City * cities ;       // Array of struct "City"
@@ -47,23 +46,51 @@ int main(){
 
 
 	Population *pop ;
+	t1 = clock();
+    
 	pop = createPopulation(POPULATION_SIZE ,true);
-	int seconds ;	
+    t2 = clock();
+	float diff ((float)t2-(float)t1);    
+	int seconds = diff / CLOCKS_PER_SEC;
+	printf("Time taken to create Population = %d\n", seconds );
+
+	optimizedCost = getCost(getFittest(pop , POPULATION_SIZE));
+	int count = 0 ;	
+	double currentCost = optimizedCost ;
+	
 	do{
+		count++;
 		for (int i = 0; i < GENERATIONS; ++i)
 		{
 			pop = evolvePopulation( pop);
 		}
 	    
 	    optimizedTour = getFittest(pop , POPULATION_SIZE) ;
-	    printTour(optimizedTour) ;
-		printf("Cost = %lf\n", getCost( optimizedTour ) );			
-		
-		//code goes here
-	    t2 = clock();
-    	float diff ((float)t2-(float)t1);    
+	    currentCost   = getCost(optimizedTour) ;
+	    if (optimizedCost > currentCost)
+		{
+			optimizedCost = currentCost ;	
+			optimizedTour = optimizer(optimizedTour);
+			printf("Cost = %lf\n", optimizedCost );			
+			printTour(optimizedTour) ;
+
+		}
+		else printf("%d\n", count );
+		t3 = clock();
+    	float diff ((float)t3-(float)t1);    
     	seconds = diff / CLOCKS_PER_SEC;
-	}while(seconds <= 5*60 );
+		printf("Time taken = %d\n", seconds );
+	
+		//code goes here
+	}while(seconds <= 5*60-2 );
+	
+	printf("Before optimization Cost = %lf\n", optimizedCost );
+	printf("Cost = %lf\n", optimizedCost );
+	printTour(optimizedTour) ;
+	
+	optimizedTour = optimizer(optimizedTour);
+	printf("Cost = %lf\n", optimizedCost );
+	printTour(optimizedTour) ;
 	
 	return 0 ;
 }

@@ -3,11 +3,12 @@
 #ifndef TSP_H
 #define TSP_H 
 
-#define TOURNAMENT_SIZE 5
-#define POPULATION_SIZE 50
+#define TOURNAMENT_SIZE 10 
+#define POPULATION_SIZE 100
 #define ELITISISM true
-#define MUTATE_RATE 0.015 
+#define MUTATE_RATE 0.15 
 #define GENERATIONS 100
+#define RANDOM_MAX 100000
 
 
 extern double** matrix ;
@@ -42,10 +43,14 @@ double getFitness(int* tour);
 
 bool containsCity(int* tour , int city);
 
+void swapCity(int* tour , int cityIndex1 , int cityIndex2) ;
+
 /*************creating population ******/
 Population* createPopulation(int size,bool initilize);
 
 int* getFittest(Population* pop, int size );
+
+int getWeakestIndex(Population* pop, int size) ;
 
 int* getTour(Population* pop , int index); 
 
@@ -59,5 +64,8 @@ Population* evolvePopulation(Population* pop );
 int* crossover(int * parent1 , int* parent2);
 
 void mutate(int* tour ) ;
+
+
+int* optimizer(int* tour);
 
 #endif // TSP_H
